@@ -1,0 +1,281 @@
+<#include "header.htm"/>
+
+<#import "../macros/pagination.ftl" as pagination>
+<#import "../macros/presentation.ftl" as presentation/>
+
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
+
+<#if logged>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/watch.js?${startupTime}"></script>
+</#if>
+
+<#if moderator>
+<script type="text/JavaScript" src="${JForumContext.encodeURL("/js/list/moderation")}"></script>
+</#if>
+<#assign breadCrumb>
+<div class="container-fluid breadcrumb-bg">
+    <div class="container">
+    <ol class="breadcrumb">
+    <li><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+<li > <a href="${JForumContext.encodeURL("/recentTopics/list")}">${I18n.getMessage("ForumBase.recentTopics")}</a></li>
+<li class="active"><a>${forum.name?html}</a></li>
+
+<span id="date_time"></span><!--date_time-->
+    </ol><!--breadcrumb-->
+    </div><!--container-->
+    </div>
+    </#assign>
+
+    ${breadCrumb}
+    <div class="container">
+
+    <div class="col-sm-9 left-section">
+
+    <h1 class="title">${forum.name?html}</h1>
+    <form accept-charset="${encoding}" action="${JForumContext.encodeURL("/jforum")}" method="get" id="formSearch" name="formSearch">
+    <input type="hidden" name="module" value="search"/>
+    <input type="hidden" name="action" value="search"/>
+    <input type="hidden" name="forum" value="${forum.id}">
+    <input type="hidden" name="match_type" value="all">
+    <div class="testforum-top">
+
+    <div class="col-3">
+
+
+    <input class="effect-7" type="text" onblur="if (this.value == '') this.value = '${I18n.getMessage("ForumIndex.searchThisForum")}...';" onclick="if (this.value == '${I18n.getMessage("ForumIndex.searchThisForum")}...') this.value = '';" value="${I18n.getMessage("ForumIndex.searchThisForum")}..." size="20" name="search_keywords" class="inputSearchForum"/>
+
+
+    <span class="focus-border"><i></i></span>
+
+</div>
+
+<button type="submit" class="btn">${I18n.getMessage("ForumBase.search")}<i class="fa fa-search"></i></button>
+
+</div><!--testforum-top-->
+
+
+</form>
+
+<#if (canApproveMessages && topicsToApprove.size() > 0)>
+<script type="text/javascript">
+<!--
+function viewPending(id)
+{
+    var tr = document.getElementById("tr_pending_" + id);
+    var d = tr.style.display
+    tr.style.display = (d == "none" ? "" : "none");
+}
+-->
+</script>
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" accept-charset="${encoding}">
+<input type="hidden" name="action" value="approveMessages" />
+<input type="hidden" name="module" value="${moduleName}" />
+<input type="hidden" name="forum_id" value="${forum.id}" />
+<div class="row boxbg">
+	${I18n.getMessage("Moderation.checkQueue")}
+	<#list topicsToApprove.values() as topic>
+	<#if topic_index % 2 == 0>
+	<#assign rowColor = "">
+	<#else>
+	<#assign rowColor = "bg_small_yellow">
+</#if>
+<div class="col-xs-1 col-sm-1 icon-img">
+
+	<img src="${contextPath}/templates/styles/images/forum-ic.png">
+
+</div><!--icon-img-->
+
+<div class="col-sm-11 forum-info">
+	<#if (topic.topicReplies > 0)>
+
+	<a href="${JForumContext.encodeURL("/posts/list/${topic.topicId}")}"><h3>${topic.topicTitle?html}</h3></a>
+</#if>
+
+<#list topic.posts as post>
+<#assign post = postFormatter.preparePostForDisplay(post)/>
+<p>${post.text}</p>
+<input type="radio" id="status_approve_${post.id}" name="status_${post.id}" value="aprove" /><label for="status_approve_${post.id}">${I18n.getMessage("Moderation.Admin.aprove")}</label>&nbsp;
+<input type="radio" id="status_defer_${post.id}" name="status_${post.id}" value="defer" checked="checked" /><label for="status_defer_${post.id}">${I18n.getMessage("Moderation.Admin.defer")}</label>&nbsp;
+<input type="radio" id="status_deny_${post.id}" name="status_${post.id}" value="reject" /><label for="status_deny_${post.id}">${I18n.getMessage("Moderation.Admin.reject")}</label>&nbsp;
+<input type="hidden" name="post_id" value="${post.id}" />
+
+<ul class="sub-info">
+
+	<li><a href="#"><i class="fa fa-question-circle"></i> Answers : 1</a></li>
+
+	<li><a href="#"><i class="fa fa-user"></i> Author : 1</a></li>
+
+	<li><a href="#"><i class="fa fa-eye"></i> Views : 1</a></li>
+
+	<li><i class="fa fa-calendar"></i> 04/01/2018</li>
+
+	<li><i class="fa fa-clock-o"></i> 06:10:50</li>
+
+</ul>
+
+</div>
+</#list>
+</#list>
+
+
+
+</form>
+</#if>
+<#if moderator>
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="formModeration" id="formModeration" accept-charset="${encoding}">
+<input type="hidden" name="action" value="doModeration" />
+<input type="hidden" name="module" value="moderation" />
+<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${forum.id}")}" />
+<input type="hidden" name="forum_id" value="${forum.id}" />
+<input type="hidden" name="log_type" value="0"/>
+<input type="hidden" name="log_description">
+</#if>
+<!-- TOPICS LISTING -->
+<#list topics as topic>
+<#assign class1>class="<@presentation.row1Class topic/>"</#assign>
+<#assign class2>class="<@presentation.row2Class topic/>"</#assign>
+<#assign class3>class="<@presentation.row3Class topic/>"</#assign>
+
+<#if canApproveMessages>
+<#if topicsToApprove.containsKey(topic.id)>
+<#assign class1 = "class='bg_yellow'"/>
+<#assign class2 = class1/>
+<#assign class3 = class1/>
+</#if>
+</#if>
+<div class="row boxbg">
+
+	<div class="col-xs-1 col-sm-1 icon-img">
+
+		<img src="${contextPath}/templates/styles/images/forum-ic.png">
+
+	</div><!--icon-img-->
+
+	<div class="col-sm-11 forum-info">
+
+		<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><h3> ${topic.title?html}</h3></a>
+
+
+		<ul class="sub-info">
+
+			<li><a href="#"><i class="fa fa-question-circle"></i> Answers : ${topic.totalReplies}</a></li>
+
+			<li><a href="${JForumContext.encodeURL("/user/profile/${topic.postedBy.id}")}"><i class="fa fa-user"></i> Author : ${topic.postedBy.username}</a></li>
+
+			<li><a href="#"><i class="fa fa-eye"></i> Views : ${topic.totalViews}</a></li>
+
+			<li><i class="fa fa-calendar"></i> ${topic.lastPostTime}</li>
+
+		</ul>
+
+	</div><!--forum-info-->
+
+</div><!--row / boxbg-->
+</#list>
+<!-- END OF TOPICS LISTING -->
+<#if moderator></form>
+</#if>
+
+
+
+
+
+<div class="forum-section">
+	<div class="row">
+		<div class="col-lg-12 col-xs-12">
+			<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}","")}" class="btn">New Post</a>
+
+			<div class="watchforumSection ad-search">
+				<#if logged>
+				<#if !watching>
+				<#assign watchMessage = I18n.getMessage("ForumShow.watch")/>
+				<a href="#watch" onClick="watchForum('${JForumContext.encodeURL("/forums/watchForum/${forum.id}")}', '${I18n.getMessage("ForumShow.confirmWatch")}');"></i> ${watchMessage}</a>
+				<#else>
+				<#assign watchMessage = I18n.getMessage("ForumShow.unwatch")/>
+
+				<a href="${JForumContext.encodeURL("/forums/unwatchForum/${forum.id}")}"><i class="fa fa-tripadvisor"></i> ${watchMessage}</a>
+			</#if>
+		</#if>
+		<@presentation.forumsComboTable/>
+
+
+
+
+
+	</div>
+</div>
+<div class="col-lg-12 col-xs-12">
+	<ul class="forumListing">
+		<li><a href="#"><i class="fa fa-envelope"></i> New messages</a></li>
+		<li><a href="#"><i class="fa fa-envelope"></i> New Messages [Hot]</a></li>
+		<li><a href="#"><i class="fa fa-envelope"></i> New Messages [Blocked]</a></li>
+	</ul>
+	<ul class="forumListing">
+		<li><a href="#"><i class="fa fa-envelope"></i> New Messages</a></li>
+		<li><a href="#"><i class="fa fa-envelope"></i> No New Messages [Hot]</a></li>
+		<li><a href="#"><i class="fa fa-envelope"></i> No New Messages [Blocked]</a></li>
+	</ul>
+	<ul class="forumListing">
+		<li><a href="#"><i class="fa fa-volume-up"></i> Annouce</a></li>
+		<li><a href="#"><i class="fa fa-sticky-note"></i> Sticky</a></li>
+		<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Moved to Another forum</a></li>
+	</ul>
+
+</div>
+</div>
+</div>
+
+</div><!--col-sm-9 / left-section-->
+
+
+
+<div class="col-sm-3 right-section">
+
+	<h1 class="title">calendar</h1>
+
+	<div class="calendar">
+
+		<div id="datepicker" data-date="12/03/2012"></div>
+
+		<input type="hidden" id="my_hidden_input">
+
+	</div><!--calendar-->
+
+
+
+	<h1 class="title">Who is online</h1>
+
+	<div class="boxbg2">
+
+		<p>Our users have posted a total of 3 messages</p>
+
+		<p>We have 5 registered users The newest registered user is <a href="#">wangyi</a></p>
+
+		<hr>
+
+		<p>There are 5 online users</p>
+
+		<p><i class="fa fa-circle registered"></i> <span>1 Registered</span></p>
+
+		<p><i class="fa fa-circle guest"></i> <span>4 Guest</span></p>
+
+		<p>There are 5 online users</p>
+
+		<p class="date"><i class="fa fa-calendar"></i> 04/01/2018 | <i class="fa fa-clock-o"></i> 06:10:50</p>
+
+		<p>Connected users : <span>Anonymous</span></p>
+
+	</div><!--boxbg2-->
+
+</div><!--col-sm-3 / right-section-->
+
+
+
+
+
+
+
+</div><!--container-->
+
+
+<#include "bottom.htm"/>

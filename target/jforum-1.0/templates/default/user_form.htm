@@ -1,0 +1,640 @@
+<#include "header.htm"/>
+<#assign admin = admin?default(false)/>
+<#assign breadCrumb>
+<div class="container-fluid breadcrumb-bg">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+			<li class="active"> ${I18n.getMessage("User.registerInformation")}</li>
+
+			<span id="date_time"></span><!--date_time-->
+		</ol><!--breadcrumb-->
+	</div><!--container-->
+</div>
+</#assign>
+
+${breadCrumb}
+<script type="text/javascript">
+    <!--
+    function validateForm()
+    {
+        var f = document.post;
+
+        if (f.new_password.value != f.password_confirm.value) {
+            alert("${I18n.getMessage("User.passwordNotMatch")}");
+            return false;
+        }
+
+        return true;
+    }
+
+    <#include "js/utils.js"/>
+
+    -->
+</script>
+
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" accept-charset="${encoding}" onsubmit="return validateForm();">
+<input type="hidden" name="action" value="${action}" />
+<input type="hidden" name="module" value="${moduleName}" />
+
+<input type="hidden" name="user_id" value="${u.id}" />
+<div class="container">
+	<div class="col-sm-9 left-section">
+		<h1 class="title">Registration Information</h1>
+		<#assign message = ""/>
+		<#if editDone?default(false)>
+		<#assign message = I18n.getMessage("User.editDone")/>
+		<#elseif warns?exists>
+		<#list warns as w>
+		<#assign message = message + w + "<br />"/>
+	</#list>
+</#if>
+
+<#if (message?length > 0)>
+${message}
+</#if>
+<div class="row ad-search register-info">
+	<div class="col-xs-12 col-sm-12">
+		<div class="row">
+			<h6 class="user">${I18n.getMessage("User.user")}: <label>
+				<#if admin?default(false)>
+				<input class="post" type="text" name="username" value="${u.username?html}" />
+				<#else>
+				${u.username?html}
+			</#if></label></h6>
+		</div>
+	</div><!--col-xs-12 col-sm-12-->
+
+	<div class="col-xs-6 col-sm-6">
+		<div class="row p-r10">
+			<h6>${I18n.getMessage("User.emailAddress")} <span>*</span></h6>
+			<div class="col-3">
+				<input type="text" class="effect-7"  maxlength="255" size="25" name="email" value="${u.email?default("")?html}" />
+				<span class="focus-border"><i></i></span>
+			</div>
+		</div><!--row-->
+	</div><!--col-xs-6 col-sm-6-->
+<#if !admin?default(false)>
+	<div class="col-xs-6 col-sm-6">
+		<div class="row p-l10">
+			<h6>${I18n.getMessage("User.currentPassword")} <span>*</span><!--${I18n.getMessage("User.needConfirmPassword")}--></h6>
+			<div class="col-3">
+				<input name="current_password" type="password" class="effect-7" id="current_password"  size="25" maxlength="100" />
+				<span class="focus-border"><i></i></span>
+			</div>
+		</div><!--row-->
+	</div><!--col-xs-6 col-sm-6-->
+</#if>
+
+
+
+<div class="col-xs-6 col-sm-6" >
+	<div class="row p-r10">
+		<h6 >
+			${I18n.getMessage("User.newPassword")} <span>*</span>
+			<!--${I18n.getMessage("User.newPasswordIsOptional")}-->
+		</h6>
+		<div class="col-3" style="margin-left: 4%;">
+			<input class="effect-7"  type="password" maxlength="100" size="25" name="new_password" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<h6>${I18n.getMessage("User.confirmPassword")} <span>*</span><!--${I18n.getMessage("User.newPasswordIsOptional")}--></h6>
+		<div class="col-3">
+			<input class="effect-7" type="password" maxlength="100" size="25" name="password_confirm" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-12 col-sm-12">
+	<div class="row">
+		<h6 class="section-title">${I18n.getMessage("User.infoWillBePublicVisible")}</h6>
+	</div>
+</div><!--col-xs-12 col-sm-12-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.icq")}:</h6>
+		<div class="col-3">
+			<input type="text" class="effect-7" maxlength="15" size="10" name="icq" value="${u.icq?default("")?html}" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<h6>${I18n.getMessage("User.aim")}:</h6>
+		<div class="col-3">
+			<input type="text" class="effect-7" maxlength="255" name="aim" value="${u.aim?default("")?html}" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.msn")}:</h6>
+		<div class="col-3">
+			<input type="text" class="effect-7" maxlength="255" name="msn" value="${u.msnm?default("")?html}" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<h6>${I18n.getMessage("User.yahoo")}:</h6>
+		<div class="col-3">
+			<input type="text" class="effect-7" maxlength="255" name="yim" value="${u.yim?default("")?html}" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.www")}:</h6>
+		<div class="col-3">
+			<input type="text" class="effect-7" maxlength="255" size="25" name="website" value="${u.webSite?default("")?html}" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<h6>${I18n.getMessage("User.from")}:</h6>
+		<div class="col-3">
+			<input type="text" class="effect-7" maxlength="100" size="25" name="location" value="${u.from?default("")?html}" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.job")}</h6>
+		<div class="col-3">
+			<input type="text" class="effect-7" maxlength="100" size="25" name="occupation"  value="${u.occupation?default("")?html}" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<h6>${I18n.getMessage("User.interests")}:</h6>
+		<div class="col-3">
+			<input type="text" class="effect-7" name="interests" value="${u.interests?default("")?html}" />
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.biography")}:</h6>
+		<div class="col-3">
+			<textarea class="effect-7" name="biography" rows="5">${u.biography?default("")}</textarea>
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<h6>${I18n.getMessage("User.signature")}: <!--${I18n.getMessage("User.signatureDef")}--></h6>
+		<div class="col-3">
+			<textarea class="effect-7" name="signature" rows="5" >${u.signature?default("")}</textarea>
+			<span class="focus-border"><i></i></span>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-12 col-sm-12">
+	<div class="row">
+		<h6 class="section-title">${I18n.getMessage("User.preferences")}</h6>
+	</div>
+</div><!--col-xs-12 col-sm-12-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.showEmail")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" name="o5" value="">
+				<input type="radio" <#if u.isViewEmailEnabled()>checked="checked"</#if> value="1" name="viewemail" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="0" <#if u.isViewEmailEnabled() == false>checked="checked"</#if> name="viewemail" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.hideOnlineStatus")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="1" <#if u.isViewOnlineEnabled() == false>checked="checked"</#if> name="hideonline" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if u.isViewOnlineEnabled()>checked="checked"</#if> value="0" name="hideonline" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.sendPostReplyNotify")}:${I18n.getMessage("User.sendPostReplyNotifyDescription")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if u.isNotifyOnMessagesEnabled()>checked="checked"</#if> value="1" name="notifyreply" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="0" <#if u.isNotifyOnMessagesEnabled() == false>checked="checked"</#if> name="notifyreply" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.notifyAlways")}:${I18n.getMessage("User.notifyAlwaysDescription")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if u.notifyAlways()>checked="checked"</#if> value="1" name="notify_always" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="0" <#if u.notifyAlways() == false>checked="checked"</#if>  name="notify_always" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.notifyText")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if u.notifyText()>checked="checked"</#if> value="1" name="notify_text" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="0" <#if u.notifyText() == false>checked="checked"</#if>  name="notify_text" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.privateMessagesNotify")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if u.isNotifyPrivateMessagesEnabled()>checked="checked"</#if> value="1" name="notifypm" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="0" <#if u.isNotifyPrivateMessagesEnabled() == false>checked="checked"</#if>  name="notifypm" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.alwaysAttachSignature")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if u.attachSignatureEnabled>checked="checked"</#if> value="1" name="attachsig" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="0" <#if u.attachSignatureEnabled == false>checked="checked"</#if> name="attachsig" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.allowHtml")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="1" <#if u.isHtmlEnabled()>checked="checked"</#if> name="allowhtml" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if u.isHtmlEnabled() == false>checked="checked"</#if> value="0" name="allowhtml" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.allowBbCode")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="1" <#if u.isBbCodeEnabled()>checked="checked"</#if> name="allowbbcode" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if !u.isBbCodeEnabled()>checked="checked"</#if> value="0" name="allowbbcode" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.allowSmilies")}:</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" value="1" <#if u.isSmiliesEnabled()>checked="checked"</#if> name="allowsmilies" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.yes")}
+			</label>
+		</div>
+		<div class="radio">
+			<label style="font-size: 1em">
+				<input type="radio" <#if !u.isSmiliesEnabled()>checked="checked"</#if> value="0" name="allowsmilies" />
+			<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+			${I18n.getMessage("User.no")}
+			</label>
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.langPreference")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<select name="language">
+			<option value="" <#if u.lang?default("") == "">selected="selected"</#if>>${I18n.getMessage("User.Lang.default")}</option>
+		<option value="en_US" <#if u.lang?default("") == "en_US">selected="selected"</#if>>${I18n.getMessage("User.Lang.en_US")}</option>
+	<option value="zh_TW" <#if u.lang?default("") == "zh_TW">selected="selected"</#if>>${I18n.getMessage("User.Lang.zh_TW")}</option>
+<option value="zh_CN" <#if u.lang?default("") == "zh_CN">selected="selected"</#if>>${I18n.getMessage("User.Lang.zh_CN")}</option>
+<option value="fr_FR" <#if u.lang?default("") == "fr_FR">selected="selected"</#if>>${I18n.getMessage("User.Lang.fr_FR")}</option>
+<option value="de_DE" <#if u.lang?default("") == "de_DE">selected="selected"</#if>>${I18n.getMessage("User.Lang.de_DE")}</option>
+<option value="nl_NL" <#if u.lang?default("") == "nl_NL">selected="selected"</#if>>${I18n.getMessage("User.Lang.nl_NL")}</option>
+<option value="pt_PT" <#if u.lang?default("") == "pt_PT">selected="selected"</#if>>${I18n.getMessage("User.Lang.pt_PT")}</option>
+<option value="pt_BR" <#if u.lang?default("") == "pt_BR">selected="selected"</#if>>${I18n.getMessage("User.Lang.pt_BR")}</option>
+<option value="ru_RU" <#if u.lang?default("") == "ru_RU">selected="selected"</#if>>${I18n.getMessage("User.Lang.ru_RU")}</option>
+<option value="fi_FI" <#if u.lang?default("") == "fi_FI">selected="selected"</#if>>${I18n.getMessage("User.Lang.fi_FI")}</option>
+<option value="vi_VN" <#if u.lang?default("") == "vi_VN">selected="selected"</#if>>${I18n.getMessage("User.Lang.vi_VN")}</option>
+<option value="es_ES" <#if u.lang?default("") == "es_ES">selected="selected"</#if>>${I18n.getMessage("User.Lang.es_ES")}</option>
+<option value="pl_PL" <#if u.lang?default("") == "pl_PL">selected="selected"</#if>>${I18n.getMessage("User.Lang.pl_PL")}</option>
+<option value="nb_NO" <#if u.lang?default("") == "nb_NO">selected="selected"</#if>>${I18n.getMessage("User.Lang.nb_NO")}</option>
+<option value="it_IT" <#if u.lang?default("") == "it_IT">selected="selected"</#if>>${I18n.getMessage("User.Lang.it_IT")}</option>
+<option value="hu_HU" <#if u.lang?default("") == "hu_HU">selected="selected"</#if>>${I18n.getMessage("User.Lang.hu_HU")}</option>
+</select>
+</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+<#if admin>
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.langPreference")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<select name="rank_special">
+			<option value="-1">${I18n.getMessage("User.noSpecialRanking")}</option>
+
+			<#list specialRanks as rank>
+			<option value="${rank.id}" <#if rank.id == u.rankId>selected</#if>>${rank.title}</option>
+	</#list>
+	</select>
+</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+</#if>
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.avatarDesc")}</h6>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<#if (u.avatar?exists && u.avatar?length > 0)>
+		<span class="gensmall">${I18n.getMessage("User.currentAvatar")}</span><br />
+		<br />
+		<#if u.isExternalAvatar()>
+		<img src="${u.avatar?html}" alt="[Avatar]" />
+		<#else>
+		<img src="${contextPath}/images/avatar/${u.avatar}" alt="[Avatar]" /><br />
+	</#if>
+
+	<script type="text/javascript">
+        <!--
+        var avatarBkp = "";
+
+        function clearAvatar(f)
+        {
+            if (f.avatardel.checked) {
+                avatarBkp = f.avatarUrl.value;
+                f.avatarUrl.value = '';
+            }
+            else {
+                f.avatarUrl.value = avatarBkp;
+            }
+        }
+        -->
+	</script>
+
+	<input type="checkbox" name="avatardel" onclick="clearAvatar(this.form)"/>&nbsp;
+
+	<span class="gensmall">${I18n.getMessage("User.removeAvatar")}</span>
+</#if>
+</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+<div class="col-xs-12 col-sm-12">
+	<div class="row">
+		<h6 class="section-title">${I18n.getMessage("User.avatarControlPanel")}</h6>
+	</div>
+</div><!--col-xs-12 col-sm-12-->
+
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-r10">
+		<h6>${I18n.getMessage("User.avatarFromPc")}</h6>
+		<div class="col-3">
+			<input  type="file" name="avatar" />
+
+		</div>
+	</div><!--row-->
+</div><!--col-xs-6 col-sm-6-->
+<#if admin || avatarAllowExternalUrl>
+<div class="col-xs-6 col-sm-6">
+	<div class="row p-l10">
+		<h6>${I18n.getMessage("User.avatarExternal")}</h6>
+		<div class="col-3">
+			<input class="post" type="text" name="avatarUrl" value="<#if u.isExternalAvatar()>${u.avatar?default("")?html}</#if>"/>
+		<span class="focus-border"><i></i></span>
+	</div>
+</div><!--row-->
+</div>
+</#if><!--col-xs-6 col-sm-6-->
+<div class="clear"></div>
+<br>
+
+<div class="col-sm-12 text-center">
+	<button type="submit" class="btn">${I18n.getMessage("User.submit")} <i class="fa fa-send"></i></button>
+	<button type="reset" class="btn">${I18n.getMessage("User.reset")} <i class="fa fa-rotate-left"></i></button>
+</div>
+
+
+</div><!--row / boxbg-->
+
+
+</div><!--col-sm-9 / left-section-->
+</form>
+
+<div class="col-sm-3 right-section">
+	<h1 class="title">calendar</h1>
+	<div class="calendar">
+		<div id="datepicker" data-date="12/03/2012"></div>
+		<input type="hidden" id="my_hidden_input">
+	</div><!--calendar-->
+
+	<h1 class="title">Who is online</h1>
+	<div class="boxbg2">
+		<p>Our users have posted a total of 3 messages</p>
+		<p>We have 5 registered users The newest registered user is <a href="#">wangyi</a></p>
+		<hr>
+		<p>There are 5 online users</p>
+		<p><i class="fa fa-circle registered"></i> <span>1 Registered</span></p>
+		<p><i class="fa fa-circle guest"></i> <span>4 Guest</span></p>
+		<p>There are 5 online users</p>
+		<p class="date"><i class="fa fa-calendar"></i> 04/01/2018 | <i class="fa fa-clock-o"></i> 06:10:50</p>
+		<p>Connected users : <span>Anonymous</span></p>
+	</div><!--boxbg2-->
+
+</div><!--col-sm-3 / right-section-->
+</div><!--container-->
+
+<#include "bottom.htm"/>

@@ -1,0 +1,124 @@
+<#include "header.htm"/>
+
+<script type="text/javascript">
+<!--
+<#include "js/utils.js"/>
+
+-->
+</script>
+<#assign breadCrumb>
+<div class="container-fluid breadcrumb-bg">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+			<li class="active"> ${I18n.getMessage("UserProfile.myprofile")}</li>
+
+			<span id="date_time"></span><!--date_time-->
+		</ol><!--breadcrumb-->
+	</div><!--container-->
+</div>
+</#assign>
+
+${breadCrumb}
+<div class="container">
+	<div class="col-sm-9 left-section my-profile">
+		<h1 class="title">${I18n.getMessage("UserProfile.myprofile")}</h1>
+		<div class="row boxbg">
+			<div class="col-sm-5 user-info">
+				<img src="${contextPath}/templates/styles/images/my-profile-ic.png">
+				<h4 class="user-name">${u.username}</h4>
+				<p class="star-ic">
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star-half-empty"></i>
+					<i class="fa fa-star-o"></i>
+					<!--<#if karmaEnabled>
+					<script type="text/javascript">writeStars(${u.karma.karmaPoints}, ${u.id});</script>
+				</#if>-->
+				</p>
+				<p><a href="${JForumContext.encodeURL("/pm/sendTo/${u.id}")}" ><i class="fa fa-comments"></i> Private Chat</a></p>
+				<p><a href="#"><i class="fa fa-group"></i> MSN Messenger</a></p>
+				<p><a href="#"><i class="fa fa-yahoo"></i> Yahoo Messenger</a></p>
+			</div><!--icon-img-->
+			<div class="col-sm-7 forum-info about-info">
+				<h4>All about ${u.username}</h4>
+				<p><i class="fa fa-calendar"></i> ${I18n.getMessage("UserProfile.registrationDate")} : ${u.registrationDate}</p>
+				<p><i class="fa fa-file-text"></i> ${I18n.getMessage("UserProfile.totalMessages")}  :  <#if (nposts > 0)>
+					<a class="gen" href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">[${nposts}] ${I18n.getMessage("PostShow.userPosts")} ${u.username?html}</a>
+					<#else>
+					<span class="gen">${I18n.getMessage("PostShow.noUserCreatedPosts")}</span>
+				</#if></p>
+				<p><i class="fa fa-folder-open"></i> ${I18n.getMessage("ForumListing.userCreatedTopics")}  :  <#if (ntopics > 0)>
+					<b><a class="gen" href="${JForumContext.encodeURL("/recentTopics/showTopicsByUser/${u.id}")}">[${ntopics}] ${I18n.getMessage("ForumListing.userTopics")?html} ${u.username?html}</a> </b>
+					<#else>
+					<span class="gensmall">${I18n.getMessage("ForumListing.noUserCreatedTopics")}</span>
+				</#if></p>
+				<p><i class="fa fa-map-marker"></i> State Name, Country</p>
+				<p><i class="fa fa-globe"></i>
+					<#if (u.webSite?exists && u.webSite?length > 0)>
+					${I18n.getMessage("UserProfile.webSite")}:<a href="${u.webSite}" target="_new">${u.webSite}</a>
+				</#if>
+				</p>
+				<p><i class="fa fa-user-secret"></i>
+					<#if (u.occupation?exists && u.occupation?length > 0)>
+					${I18n.getMessage("UserProfile.occupation")}: ${u.occupation}
+				</#if>
+				</p>
+				<p><i class="fa fa-heart"></i>
+					<#if (u.interests?exists && u.interests?length > 0)>
+					${I18n.getMessage("UserProfile.interests")}:${u.interests}
+				</#if>
+
+
+				</p>
+				<p><i class="fa fa-book"></i>
+					<#if (u.biography?exists && u.biography?length > 0)>
+					${I18n.getMessage("UserProfile.biography")}:${u.biography}
+				</#if>
+				</p>
+				<p><i class="fa fa-bookmark"></i>
+					<#if bookmarksEnabled>
+					${I18n.getMessage("Bookmarks.myBag")}:<#if (nbookmarks > 0)>
+					<b><a class="gen" href="${JForumContext.encodeURL("/bookmarks/list/${u.id}")}">[${nbookmarks}] ${I18n.getMessage("Bookmarks.for")} ${u.username?html}</a> </b>
+					<#else>
+					<span class="gensmall">${I18n.getMessage("Bookmarks.empty")}</span>
+				</#if>
+				</#if>
+				</p>
+			</div><!--forum-info-->
+		</div><!--row / boxbg-->
+
+
+
+
+
+
+
+	</div><!--col-sm-9 / left-section-->
+
+	<div class="col-sm-3 right-section">
+		<h1 class="title">calendar</h1>
+		<div class="calendar">
+			<div id="datepicker" data-date="12/03/2012"></div>
+			<input type="hidden" id="my_hidden_input">
+		</div><!--calendar-->
+
+		<h1 class="title">Who is online</h1>
+		<div class="boxbg2">
+			<p>Our users have posted a total of 3 messages</p>
+			<p>We have 5 registered users The newest registered user is <a href="#">wangyi</a></p>
+			<hr>
+			<p>There are 5 online users</p>
+			<p><i class="fa fa-circle registered"></i> <span>1 Registered</span></p>
+			<p><i class="fa fa-circle guest"></i> <span>4 Guest</span></p>
+			<p>There are 5 online users</p>
+			<p class="date"><i class="fa fa-calendar"></i> 04/01/2018 | <i class="fa fa-clock-o"></i> 06:10:50</p>
+			<p>Connected users : <span>Anonymous</span></p>
+		</div><!--boxbg2-->
+
+	</div><!--col-sm-3 / right-section-->
+</div><!--container-->
+
+
+<#include "bottom.htm"/>

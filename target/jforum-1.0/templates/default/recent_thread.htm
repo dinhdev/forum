@@ -1,0 +1,94 @@
+<#include "header.htm"/>
+<#import "../macros/pagination.ftl" as pagination>
+<#import "../macros/presentation.ftl" as presentation/>
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="${contextPath}/rss/recentTopics${extension}" />
+<#assign breadCrumb>
+<div class="container-fluid breadcrumb-bg">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+			<li class="active"> ${I18n.getMessage("ForumBase.recentTopics")}</li>
+
+			<span id="date_time"></span><!--date_time-->
+		</ol><!--breadcrumb-->
+	</div><!--container-->
+</div>
+</#assign>
+
+${breadCrumb}
+<div class="container">
+	<div class="col-sm-9 left-section">
+		<h1 class="title">Recent Topics</h1>
+		<#list topics as topic>
+		<div class="row boxbg">
+			<div class="col-xs-1 col-sm-1 icon-img">
+				<img src="${contextPath}/templates/styles/images/recent-topics-ic.png">
+			</div><!--icon-img-->
+			<div class="col-sm-11 forum-info">
+				<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><h3> <#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></h3> </a>
+
+				<p><a href="${JForumContext.encodeURL("/forums/show/${forums.get(topic_index).getId()}")}">${forums.get(topic_index).getName()}</a></p>
+				<ul class="sub-info">
+					<li><a href="#"><i class="fa fa-question-circle"></i> ${I18n.getMessage("ForumIndex.answers")} : ${topic.totalReplies}</a></li>
+					<li><a href="${JForumContext.encodeURL("/user/profile/${topic.postedBy.id}")}"><i class="fa fa-user"></i> ${I18n.getMessage("ForumIndex.author")} :${topic.postedBy.username}</a></li>
+					<li><a href="#"><i class="fa fa-eye"></i> ${I18n.getMessage("ForumIndex.views")} :
+						${topic.totalViews}
+					</a></li>
+					<li><i class="fa fa-calendar"></i>
+						<#if (topic.lastPostTime?length > 0)>
+						<span class="postdetails">${topic.lastPostTime}
+							<a href="${JForumContext.encodeURL("/user/profile/${topic.lastPostBy.id}")}">${topic.lastPostBy.username}</a>
+
+							<#assign startPage = ""/>
+							<#if (topic.totalReplies + 1 > postsPerPage?number)>
+								<#assign startPage = ((topic.totalReplies / postsPerPage?number)?int * postsPerPage?number) +"/"/>
+							</#if>
+
+						<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="Latest Reply" /></a></span>
+					</#if>
+					</li>
+					<!--<li><i class="fa fa-clock-o"></i> 06:10:50</li>-->
+				</ul>
+			</div><!--forum-info-->
+		</div><!--row / boxbg-->
+
+		</#list>
+		<!--<div class="pagination-section">
+			<ul class="pagination">
+				<li class="active"><a href="#">1</a></li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#">5</a></li>
+				<li><a href="#">6</a></li>
+				<li><a href="#">7</a></li>
+				<li><a href="#">8</a></li>
+			</ul>&lt;!&ndash;pagination&ndash;&gt;
+		</div>&lt;!&ndash;pagination-section&ndash;&gt;-->
+
+	</div><!--col-sm-9 / left-section-->
+
+	<div class="col-sm-3 right-section">
+		<h1 class="title">calendar</h1>
+		<div class="calendar">
+			<div id="datepicker" data-date="12/03/2012"></div>
+			<input type="hidden" id="my_hidden_input">
+		</div><!--calendar-->
+
+		<h1 class="title">Who is online</h1>
+		<div class="boxbg2">
+			<p>Our users have posted a total of 3 messages</p>
+			<p>We have 5 registered users The newest registered user is <a href="#">wangyi</a></p>
+			<hr>
+			<p>There are 5 online users</p>
+			<p><i class="fa fa-circle registered"></i> <span>1 Registered</span></p>
+			<p><i class="fa fa-circle guest"></i> <span>4 Guest</span></p>
+			<p>There are 5 online users</p>
+			<p class="date"><i class="fa fa-calendar"></i> 04/01/2018 | <i class="fa fa-clock-o"></i> 06:10:50</p>
+			<p>Connected users : <span>Anonymous</span></p>
+		</div><!--boxbg2-->
+
+	</div><!--col-sm-3 / right-section-->
+</div><!--container-->
+<#include "bottom.htm"/>

@@ -1,0 +1,144 @@
+<#include "header.htm"/>
+<#assign breadCrumb>
+<div class="container-fluid breadcrumb-bg">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+			<li class="active"> ${I18n.getMessage("ForumBase.search")}</li>
+
+			<span id="date_time"></span><!--date_time-->
+		</ol><!--breadcrumb-->
+	</div><!--container-->
+</div>
+</#assign>
+
+${breadCrumb}
+
+<div class="container">
+	<form accept-charset="${encoding}" action="${JForumContext.encodeURL("/jforum")}" method="get" id="formSearch" name="formSearch">
+	<input type="hidden" name="module" value="${moduleName}" />
+	<input type="hidden" name="action" value="search" />
+	<div class="col-sm-9 left-section">
+		<h1 class="title">${I18n.getMessage("Search.terms")}</h1>
+		<div class="row ad-search">
+			<h6>${I18n.getMessage("Search.typeKeywords")}</h6>
+
+			<div class="col-3">
+				<input class="effect-7" name="search_keywords" type="text" >
+				<span class="focus-border"><i></i></span>
+			</div>
+
+
+			<div class="radio">
+				<label style="font-size: 1em">
+					<input name="match_type" type="radio" value="all" checked="checked" id="all_terms">
+					<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+					${I18n.getMessage("Search.allTerms")}
+				</label>
+			</div>
+
+			<div class="radio">
+				<label style="font-size: 1em">
+					<input type="radio" value="any" name="match_type" id="any_term">
+					<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+					${I18n.getMessage("Search.anyTerm")}
+				</label>
+			</div>
+			<div class="col-sm-6">
+				<div class="row p-r10">
+					<h6>${I18n.getMessage("Search.forum")}</h6>
+					<select class="post" name="search_forum">
+						<option value="" selected="selected">${I18n.getMessage("Search.allAvailable")}</option>
+						<#list categories as c>
+						<optgroup label="${c.name}">
+							<#list c.getForums() as f>
+							<option value="${f.id}">${f.name}</option>
+						</#list>
+						</optgroup>
+					</#list>
+					</select>
+				</div><!--row-->
+			</div>
+
+			<div class="col-sm-6">
+				<h6 class="p-l10">${I18n.getMessage("Search.orderBy")}</h6>
+				<div class="row p-l10">
+					<select class="post" name="sort_by" onChange="enableDisableOrderBy(this.value);">
+						<option value="relevance" selected="selected">${I18n.getMessage("Search.relevance")}</option>
+						<option value="time">${I18n.getMessage("Search.postDate")}</option>
+					</select>
+
+					<div class="radio">
+						<label style="font-size: 1em">
+							<input type="radio" value="ASC" name="sort_dir" id="sort_asc">
+							<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+							${I18n.getMessage("Search.ascending")}
+						</label>
+					</div>
+
+					<div class="radio">
+						<label style="font-size: 1em">
+							<input type="radio" checked="checked" value="DESC" name="sort_dir" id="sort_desc">
+							<span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+							${I18n.getMessage("Search.descending")}
+						</label>
+					</div>
+				</div><!--row-->
+			</div><!--col-sm-6-->
+
+			<div class="col-sm-12 text-center">
+				<button type="submit" value="${I18n.getMessage("Search.search")}" class="btn">Search <i class="fa fa-search"></i></button>
+
+			</div>
+
+
+		</div><!--row / boxbg-->
+
+	</div><!--col-sm-9 / left-section-->
+
+
+
+	</form>
+	<div class="col-sm-3 right-section">
+		<h1 class="title">calendar</h1>
+		<div class="calendar">
+			<div id="datepicker" data-date="12/03/2012"></div>
+			<input type="hidden" id="my_hidden_input">
+		</div><!--calendar-->
+
+		<h1 class="title">Who is online</h1>
+		<div class="boxbg2">
+			<p>Our users have posted a total of 3 messages</p>
+			<p>We have 5 registered users The newest registered user is <a href="#">wangyi</a></p>
+			<hr>
+			<p>There are 5 online users</p>
+			<p><i class="fa fa-circle registered"></i> <span>1 Registered</span></p>
+			<p><i class="fa fa-circle guest"></i> <span>4 Guest</span></p>
+			<p>There are 5 online users</p>
+			<p class="date"><i class="fa fa-calendar"></i> 04/01/2018 | <i class="fa fa-clock-o"></i> 06:10:50</p>
+			<p>Connected users : <span>Anonymous</span></p>
+		</div><!--boxbg2-->
+
+	</div><!--col-sm-3 / right-section-->
+
+
+</div><!--container-->
+<script type="text/javascript">
+    <!--
+    document.formSearch.search_keywords.focus();
+
+    function enableDisableOrderBy(type)
+    {
+        var isDisabled = type == "relevance";
+        document.formSearch.sort_dir[0].disabled = isDisabled;
+        document.formSearch.sort_dir[1].disabled = isDisabled;
+
+        if (isDisabled) {
+            document.formSearch.sort_dir[1].checked = true;
+        }
+    }
+
+    enableDisableOrderBy("relevance");
+    -->
+</script>
+<#include "bottom.htm"/>

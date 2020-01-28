@@ -1,0 +1,215 @@
+<#include "header.htm"/>
+
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
+
+<#import "../macros/pagination.ftl" as topicPagination>
+<#import "../macros/search_pagination.ftl" as pagination>
+<#import "../macros/presentation.ftl" as presentation/>
+<#assign breadCrumb>
+<div class="container-fluid breadcrumb-bg">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+			<li class="active"> ${I18n.getMessage("Search.searchResults")}</li>
+
+			<span id="date_time"></span><!--date_time-->
+		</ol><!--breadcrumb-->
+	</div><!--container-->
+</div>
+</#assign>
+
+${breadCrumb}
+<div class="container">
+	<form accept-charset="${encoding}" action="${JForumContext.encodeURL("/jforum")}" method="get" id="formSearch" name="formSearch">
+	<input type="hidden" name="module" value="${moduleName}" />
+	<input type="hidden" name="action" value="search" />
+	<div class="col-sm-9 left-section">
+		<h1 class="title">
+            ${I18n.getMessage("Search.searchResults")}:
+            ${totalRecords}
+
+            <#if (totalRecords == 1)>
+            ${I18n.getMessage("Search.recordFound")}
+            <#else>
+            ${I18n.getMessage("Search.recordsFound")}
+        </#if></h1>
+        <#if results.size() == 0>
+        <div class="row boxbg">
+            ${I18n.getMessage("Search.noResults")} <a href="${JForumContext.encodeURL("/search/filters")}">${I18n.getMessage("Search.clickHere")}</a> ${I18n.getMessage("Search.newSearch")}
+
+        </div>
+
+        <#else>
+        <#list results as post>
+
+        <#assign postUrl = JForumContext.encodeURL("/posts/preList/${post.topicId}/${post.id}")/>
+        <div class="row boxbg">
+            <div class="col-xs-1 col-sm-1 icon-img">
+                <img src="${contextPath}/templates/styles/images/forum-ic.png">
+            </div><!--icon-img-->
+            <div class="col-sm-11 forum-info">
+                <a href="${postUrl}"><h3>${post.subject?html}</h3></a>
+                <p>${post.text}</p>
+                <ul class="sub-info">
+                    <li><a href="${JForumContext.encodeURL("/user/profile/${post.userId}")}"><i class="fa fa-user"></i>${post.postUsername}</a></li>
+                    <li><i class="fa fa-calendar"></i> ${post.time?datetime}</li>
+                    <li><a href="${postUrl}">${I18n.getMessage("Search.viewMessage")}</a></li>
+                </ul>
+            </div><!--forum-info-->
+        </div><!--row / boxbg-->
+    </#list>
+</#if>
+
+	</div><!--col-sm-9 / left-section-->
+
+
+
+	</form>
+	<div class="col-sm-3 right-section">
+		<h1 class="title">calendar</h1>
+		<div class="calendar">
+			<div id="datepicker" data-date="12/03/2012"></div>
+			<input type="hidden" id="my_hidden_input">
+		</div><!--calendar-->
+
+		<h1 class="title">Who is online</h1>
+		<div class="boxbg2">
+			<p>Our users have posted a total of 3 messages</p>
+			<p>We have 5 registered users The newest registered user is <a href="#">wangyi</a></p>
+			<hr>
+			<p>There are 5 online users</p>
+			<p><i class="fa fa-circle registered"></i> <span>1 Registered</span></p>
+			<p><i class="fa fa-circle guest"></i> <span>4 Guest</span></p>
+			<p>There are 5 online users</p>
+			<p class="date"><i class="fa fa-calendar"></i> 04/01/2018 | <i class="fa fa-clock-o"></i> 06:10:50</p>
+			<p>Connected users : <span>Anonymous</span></p>
+		</div><!--boxbg2-->
+
+	</div><!--col-sm-3 / right-section-->
+
+
+</div><!--container-->
+
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
+	<tr>
+		<td class="bodyline" valign="top">
+			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+				<tr>
+					<td valign="bottom" align="left" colspan="2">
+						<span class="maintitle">
+							${I18n.getMessage("Search.searchResults")}:
+							${totalRecords} 
+							
+							<#if (totalRecords == 1)>
+								${I18n.getMessage("Search.recordFound")}
+							<#else>
+								${I18n.getMessage("Search.recordsFound")}
+							</#if>
+						</span>
+						<br />
+					</td>
+				</tr>
+				<tr>
+					<td align="left" valign="middle">		  
+						<a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
+					</td>
+					<td class="nav" valign="bottom" nowrap="nowrap" align="right">
+						<#assign paginationLinks>
+							<@pagination.searchPagination/>
+						</#assign>
+
+						${paginationLinks}
+					</td>
+				</tr>
+			</table>
+
+			<table class="forumline" cellspacing="2" cellpadding="5" width="100%" border="0">
+				<#if results.size() == 0>
+					<tr>
+						<td class="gen">
+							${I18n.getMessage("Search.noResults")} <a href="${JForumContext.encodeURL("/search/filters")}">${I18n.getMessage("Search.clickHere")}</a> ${I18n.getMessage("Search.newSearch")}
+						</td>
+					</tr>
+				<#else>
+					<#list results as post>
+						<tr>
+							<td class="postinfo">
+								<#assign postUrl = JForumContext.encodeURL("/posts/preList/${post.topicId}/${post.id}")/>
+
+								<span class="gen">
+									<img class="icon_folder" src="${contextPath}/images/transp.gif" alt=""/>
+
+									<strong>
+										<a href="${postUrl}">${post.subject?html}</a>
+									</strong>, 
+									${I18n.getMessage("Search.postedOn")} <a href="${JForumContext.encodeURL("/forums/show/${post.forum.id}")}">${post.forum.name}</a>, 
+									${I18n.getMessage("Search.postedAt")} ${post.time?datetime}, 
+									${I18n.getMessage("Search.postedBy")} <a href="${JForumContext.encodeURL("/user/profile/${post.userId}")}">${post.postUsername}</a>									
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="row1 gen">
+								${post.text}
+								<br />
+								<div align="right"><a href="${postUrl}">${I18n.getMessage("Search.viewMessage")}</a></div>
+							</td>
+						</tr>
+
+						<tr>
+							<td height="1" colspan="2" class="spacerow"><img width="1" height="1" alt="" src="${contextPath}/templates/${templateName}/images/spacer.gif"/></td>
+						</tr>
+					</#list>
+				</#if>
+			</table>
+
+			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+				<tr>
+					<td align="left" valign="middle">
+						<span class="nav">
+		  					<a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
+						</span>
+					</td>
+					<td valign="middle" nowrap="nowrap" align="right">
+						${paginationLinks}
+					</td>
+				</tr>
+				<tr>
+					<td align="left" colspan="2"></td>
+				</tr>
+			</table>
+
+			<table cellspacing="0" cellpadding="0" width="100%" border="0">
+				<tr>
+					<td align="right">
+						<table cellspacing="0" cellpadding="0" border="0">
+							<tr>
+								<td nowrap="nowrap">
+									<form action="" accept-charset="${encoding}" name="f">
+										<span class="gensmall">${I18n.getMessage("ForumIndex.goTo")}:&nbsp;
+											<select onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'${extension}'; }" name="select">
+												<option value="-1" selected="selected">${I18n.getMessage("ForumIndex.goToSelectAForum")}</option>
+
+												<#list categories as category>
+													<optgroup label="${category.name}">
+														<#list category.getForums() as forum>
+														<option value="${forum.id}">${forum.name}</option>
+														</#list>
+													</optgroup>
+												</#list>
+											</select>				  
+											&nbsp;
+											<input class="liteoption" type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" onclick="if(document.f.select.options[document.f.select.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ document.f.select.options[document.f.select.selectedIndex].value +'${extension}'; }" />
+										</span>
+									</form>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<#include "bottom.htm"/>

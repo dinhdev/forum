@@ -1,0 +1,80 @@
+<!--</td>
+</tr>
+	<tr>
+		<td align="center">
+			<#if session?exists && session.isAdmin()><span class="gen"><a id="adminpanel" href='${JForumContext.encodeURL("/admBase/login")}'>${I18n.getMessage("ForumBase.admin")}</a></span></#if>
+		</td>
+	</tr>
+
+	<tr>
+		<td align="center">
+			<span class="copyright">
+			Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum ${version}</a> &copy; <a class="copyright" href="http://www.jforum.net/team.jsp" target="_blank">JForum Team</a>
+			</span>
+		</td>
+	</tr>
+</table>-->
+<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<!--<p>Powered by JForum 2.1.8 | Copyright © 2018 JForum Team</p>-->
+				<p>Powered by <a style="color: #fff;" class="copyright" href="http://www.jforum.net/" target="_blank">JForum ${version}</a> &copy; <a style="color: #fff;" class="copyright" href="http://www.jforum.net/team.jsp" target="_blank">JForum Team</a>
+
+				</p>
+			</div><!--col-6-->
+		</div><!--row-->
+	</div><!--container-->
+</div>
+<#if hasCodeBlock>
+	<#include "highlighter_js.htm"/>
+</#if>
+
+<iframe src="${contextPath}/ping_session.jsp" height="0" width="0" frameborder="0" scrolling="no"></iframe>
+
+
+</body>
+<script type="text/javascript">window.onload = date_time('date_time');</script>
+<script  src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/styles/js/fontawesome.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/styles/js/jquery.fancybox.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/styles/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/styles/js/bootstrap.min.js"></script>
+<script>
+    $('.fancybox').fancybox();
+    $(document).ready(function() {
+        $('#datepicker').datepicker({
+            dateFormat: "yy-mm-dd"
+        }).datepicker("setDate", "0");
+        $('#datepicker').on('changeDate', function() {
+            $('#my_hidden_input').val(
+                $('#datepicker').datepicker('getFormattedDate')
+            );
+        });
+        var top_url =window.location.pathname
+        if(top_url.indexOf("/recentTopics/list")!=-1){
+            $('#latest_li').addClass('active');
+        }
+        if(top_url.indexOf("/hottestTopics/list") != -1){
+            $('#hottest_li').addClass('active');
+        }
+        if(top_url.indexOf("/user/list") != -1){
+            $('#user_li').addClass('active');
+        }
+        if(top_url.indexOf("/moderation/showActivityLog") != -1){
+            $('#moderationlog_li').addClass('active');
+        }
+        if(top_url.indexOf("/user/edit/") != -1){
+            $('#myprofile_li').addClass('active');
+        }
+        if(top_url.indexOf("/bookmarks/list/") != -1){
+            $('#bookmark_li').addClass('active');
+        }
+        if(top_url.indexOf("/pm/inbox") != -1){
+            $('#privatemessages_li').addClass('active');
+        }
+
+    });
+
+</script>
+</html>

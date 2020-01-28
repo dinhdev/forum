@@ -1,0 +1,175 @@
+<#include "header.htm"/>
+<#assign breadCrumb>
+<div class="container-fluid breadcrumb-bg">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+			<li class="active"> ${I18n.getMessage("ForumBase.privateMessages")}</li>
+
+			<span id="date_time"></span><!--date_time-->
+		</ol><!--breadcrumb-->
+	</div><!--container-->
+</div>
+</#assign>
+
+${breadCrumb}
+<div class="container">
+	<script type="text/javascript">
+        function select_switch(status)
+        {
+            for (i = 0; i < document.privmsg_list.length; i++) {
+                document.privmsg_list.elements[i].checked = status;
+            }
+        }
+	</script>
+ <form action="${JForumContext.encodeURL("/jforum")}" method="post" name="privmsg_list" id="privmsg_list">
+	<input type="hidden" name="module" value="${moduleName}" />
+	<input type="hidden" name="action" value="delete" />
+	<div class="col-sm-9 left-section private-messages">
+		<ul class="options">
+			<li><a href="${JForumContext.encodeURL("/pm/send")}"><i class="fa fa-edit"></i> New Post </a></li>
+			<li>
+				<a href="javascript:select_switch(false);"><i class="fa fa-trash"></i>${I18n.getMessage("PrivateMessage.uncheckAll")}</a>
+			</li>
+			<li class="check checkbox">
+				<a class="gensmall" href="javascript:select_switch(true);">${I18n.getMessage("PrivateMessage.checkAll")}<i class="cr-icon fa fa-check"></i></a>
+				<!--<label>Check All
+					<input type="checkbox" href="javascript:select_switch(true);" value="">
+					<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+				</label>-->
+			</li><!--checkbox-->
+		</ul>
+		<ul class="nav nav-tabs">
+			<li class="title" id="inbox_li">
+				<a href="${JForumContext.encodeURL("/pm/inbox")}"> <img src="${contextPath}/templates/styles/images/inbox-ic.png"  class="icon">  ${I18n.getMessage("PrivateMessage.inbox")}</a>
+			</li>
+			<li class="title" id="outbox_li">
+				<a href="${JForumContext.encodeURL("/pm/sentbox")}"> <img src="${contextPath}/templates/styles/images/sent-box-ic.png" class="icon"> ${I18n.getMessage("PrivateMessage.sentbox")}</a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div id="inbox" class="tab-pane fade in active">
+
+				<#list pmList as pm>
+				<a href="message-details.html">
+					<div class="row boxbg">
+						<div class="col-xs-1 col-sm-1 icon-img">
+							<img src="${contextPath}/templates/styles/images/member-ic.png">
+						</div><!--icon-img-->
+						<div class="col-sm-11 message-info">
+							<ul>
+								<li class="name">
+									<#if inbox?default(false)>
+									<a  href="${JForumContext.encodeURL("/user/profile/${pm.fromUser.id}")}">${pm.fromUser.username}</a>
+									<#else>
+									<a  href="${JForumContext.encodeURL("/user/profile/${pm.toUser.id}")}">${pm.toUser.username}</a>
+									</#if>
+								</li>
+								<li class="subject">
+									<a href="${JForumContext.encodeURL("/pm/read/${pm.id}")}">
+									${pm.post.subject?html}
+									</a>
+								</li>
+							</ul>
+
+							<ul class="other-info" style="right: 2%;">
+								<li class="date" style="width: 85%"><i class="fa fa-calendar"></i>${pm.formatedDate}</li><!--date-->
+								<li class="check checkbox">
+									<label>
+										<input type="checkbox" value="${pm.id}" name="id" />
+										<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+									</label>
+								</li><!--checkbox-->
+							</ul><!--other-info-->
+
+						</div><!--forum-info-->
+					</div><!--row / boxbg-->
+				</a>
+			</#list>
+
+			</div><!--inbox section-->
+			<!--<div id="sentbox" class="tab-pane fade">
+				<a href="message-details.html">
+					<div class="row boxbg">
+						<div class="col-xs-1 col-sm-1 icon-img">
+							<img src="${contextPath}/templates/styles/images/member-ic.png">
+						</div>&lt;!&ndash;icon-img&ndash;&gt;
+						<div class="col-sm-11 message-info">
+							<ul>
+								<li class="name">Jennifer</li>
+								<li class="subject">Lorem Ipsum is simply dummy text...</li>
+							</ul>
+
+							<ul class="other-info">
+								<li class="date"><i class="fa fa-calendar"></i> 05 Jan 18</li>&lt;!&ndash;date&ndash;&gt;
+								<li class="check checkbox">
+									<label>
+										<input type="checkbox" value="">
+										<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+									</label>
+								</li>&lt;!&ndash;checkbox&ndash;&gt;
+							</ul>&lt;!&ndash;other-info&ndash;&gt;
+
+						</div>&lt;!&ndash;forum-info&ndash;&gt;
+					</div>&lt;!&ndash;row / boxbg&ndash;&gt;
+				</a>
+			</div>&lt;!&ndash;sentbox section&ndash;&gt;-->
+		</div><!--tab-content-->
+
+
+
+
+		<div class="pagination-section">
+			<!--<ul class="pagination">
+				<li class="active"><a href="#">1</a></li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#">5</a></li>
+				<li><a href="#">6</a></li>
+				<li><a href="#">7</a></li>
+				<li><a href="#">8</a></li>
+			</ul>--><!--pagination-->
+		</div><!--pagination-section-->
+
+	</div><!--col-sm-9 / left-section-->
+
+	<div class="col-sm-3 right-section">
+		<h1 class="title">calendar</h1>
+		<div class="calendar">
+			<div id="datepicker" data-date="12/03/2012"></div>
+			<input type="hidden" id="my_hidden_input">
+		</div><!--calendar-->
+
+		<h1 class="title">Who is online</h1>
+		<div class="boxbg2">
+			<p>Our users have posted a total of 3 messages</p>
+			<p>We have 5 registered users The newest registered user is <a href="#">wangyi</a></p>
+			<hr>
+			<p>There are 5 online users</p>
+			<p><i class="fa fa-circle registered"></i> <span>1 Registered</span></p>
+			<p><i class="fa fa-circle guest"></i> <span>4 Guest</span></p>
+			<p>There are 5 online users</p>
+			<p class="date"><i class="fa fa-calendar"></i> 04/01/2018 | <i class="fa fa-clock-o"></i> 06:10:50</p>
+			<p>Connected users : <span>Anonymous</span></p>
+		</div><!--boxbg2-->
+
+	</div><!--col-sm-3 / right-section-->
+
+ </form>
+</div><!--container-->
+<script  src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+
+		var url =window.location.pathname
+		if(url.indexOf("/pm/sentbox.page")!=-1){
+            $('#outbox_li').addClass('active');
+		}
+        if(url.indexOf("/pm/inbox") != -1){
+            $('#inbox_li').addClass('active');
+        }
+    });
+</script>
+
+<#include "bottom.htm"/>

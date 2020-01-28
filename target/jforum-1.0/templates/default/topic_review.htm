@@ -1,0 +1,70 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="${encoding}"/>
+<title>${pageTitle}</title>
+<style type="text/css">@import url( ${contextPath}/templates/styles/css/bootstrap.min.css?${startupTime} );</style>
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/bootstrap-datepicker.css?${startupTime} );</style>
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/owl.theme.css?${startupTime} );</style>
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/style.css?${startupTime} );</style>
+	<link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700" rel="stylesheet">
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js?${startupTime}"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
+
+<#if hasCodeBlock?default(false)>
+	<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
+</#if>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#01336B" vlink="#01336B">
+<div class="container">
+	<div class="col-sm-12 left-section private-messages message-details forum-details edit-box">
+		<div class="row review-message review-message-header" style="    margin-right: -20%;
+    margin-left: -20%;">
+			<div class="col-sm-12 title post_pre_view">
+				<h3>${I18n.getMessage("PostShow.topicReview")}</h3>
+			</div><!--title-->
+		</div><!--review-message-header-->
+		<div class="row boxbg review-message" style="    margin-right: -10%;
+    margin-left: -6%;">
+
+			<#list posts as post>
+			<#if post_index % 2 == 0>
+			<#assign rowColor = "row1">
+			<#else>
+			<#assign rowColor = "row2">
+		</#if>
+
+		<#assign user = users.get(post.userId)/>
+		<div class="col-xs-1 col-sm-1 icon-img">
+			<img src="${contextPath}/templates/styles/images/member-ic.png">
+		</div><!--icon-img-->
+		<div class="col-sm-11 message-info">
+			<ul>
+				<li class="name">${user.username}</li>
+			</ul>
+
+			<ul class="other-info">
+				<li class="date"><i class="fa fa-calendar"></i> ${post.formatedTime}</li><!--date-->
+			</ul><!--other-info-->
+		</div><!--forum-info-->
+
+		<div class="col-sm-12 message-box">
+			<h5 class="subject" style="padding: 20px 0px;">${I18n.getMessage("PostShow.subject")}: ${post.subject?default("")?html}</h5>
+			<p>${post.text}</p>
+		</div><!--message-box-->
+	</#list>
+</div><!-
+
+<script type="text/javascript">
+    limitURLSize();
+</script>
+
+<#if hasCodeBlock?default(false)>
+<#include "highligther_js.htm"/>
+</#if>
+
+	</div>
+</div>
+</body>
+</html>

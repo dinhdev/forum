@@ -1,0 +1,110 @@
+<#setting number_format = "#"/>
+<#setting datetime_format = dateTimeFormat/>
+<#assign logged = logged?default(false)/>
+<#assign language = language?default("en_US")/>
+<#assign hasCodeBlock = hasCodeBlock?default(false)/>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="-1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/png" href="${contextPath}/templates/styles/images/favicon.png">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700" rel="stylesheet">
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/bootstrap.min.css?${startupTime} );</style>
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/bootstrap-datepicker.css?${startupTime} );</style>
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/jquery.fancybox.css?${startupTime} );</style>
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/owl.carousel.css?${startupTime} );</style>
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/owl.theme.css?${startupTime} );</style>
+	<style type="text/css">@import url( ${contextPath}/templates/styles/css/style.css?${startupTime} );</style>
+	<script type="text/javascript" src="${contextPath}/templates/styles/js/date_time.js"></script>
+	<!--
+    <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
+    -->
+	<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/${language}.css?${startupTime} );</style>
+
+	<#if hasCodeBlock>
+	<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
+</#if>
+
+<title>${pageTitle?default("JForum")?html}</title>
+<head>
+	<title>Dataexo Forum</title>
+</head>
+
+</head>
+<body class="${language}">
+
+<header class="Top-header">
+	<div class="container-fluid">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-5 logo">
+					<a class="navbar-brand" href="${JForumContext.encodeURL("/forums/list")}">
+					<!--<img src="images/logo.png">-->
+					<img src="${contextPath}/templates/styles/images/logo.png" alt="[Moderation Log]" />
+					</a>
+				</div><!--Logo-->
+				<a  class="col-sm-7">
+					<a class="search-btn" href="${JForumContext.encodeURL("/search/filters")}">${I18n.getMessage("ForumBase.search")} <i class="fa fa-search"></i></a>
+				<#if !logged && !sso>
+
+				<div class="div_log_register">
+					<a style="cursor: pointer;color: #fff" href="${JForumContext.encodeURL("/user/login")}"> ${I18n.getMessage("ForumBase.login")}</a> |
+					<a style="cursor: pointer;color: #fff" href="${JForumContext.encodeURL("/user/login")}">${I18n.getMessage("ForumBase.register")}</a>
+				</div>
+
+			</#if>
+			<#if logged>
+			<a id="logout" class="search-btn" href="${JForumContext.encodeURL("/user/logout")}">${I18n.getMessage("ForumBase.logout")} [${session.username}]</a>
+		</#if>
+	</div>
+	</div><!--row-->
+	</div><!--container-->
+	</div><!--container-fluid-->
+</header>
+<nav class="navbar navbar-default">
+	<div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<a class="m-logo" href="index.html"><img src="${contextPath}/templates/styles/images/logo.png"></a>
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li id="latest_li"><a id="latest" href="${JForumContext.encodeURL("/recentTopics/list")}">${I18n.getMessage("ForumBase.recentTopics")}</a></li>
+				<li id="hottest_li"><a id="hottest"  href="${JForumContext.encodeURL("/hottestTopics/list")}">${I18n.getMessage("ForumBase.hottestTopics")}</a></li>
+				<li id="user_li"><a id="latest2" href="${JForumContext.encodeURL("/user/list")}">${I18n.getMessage("ForumBase.usersList")}</a></li>
+				<#if canAccessModerationLog?default(false)>
+				<li id="moderationlog_li"><a id="moderationlog" href="${JForumContext.encodeURL("/moderation/showActivityLog")}">${I18n.getMessage("ModerationLog.moderationLog")}</a></li>
+			</#if>
+
+			<#if logged>
+			<li id="myprofile_li"><a id="myprofile" href="${JForumContext.encodeURL("/user/edit/${session.userId}")}">${I18n.getMessage("ForumBase.profile")}</a></li>
+			<#if bookmarksEnabled>
+			<li id="bookmark_li"><a href="${JForumContext.encodeURL("/bookmarks/list/${session.userId}")}">${I18n.getMessage("Bookmarks.myBag")}</a></li>
+
+		</#if>
+		<li id="privatemessages_li"><a id="privatemessages" href="${JForumContext.encodeURL("/pm/inbox")}">
+			<#if (session.privateMessages > 0)>
+			${I18n.getMessage("ForumBase.newPm")}: (${session.privateMessages})
+			<#else>
+			${I18n.getMessage("ForumBase.privateMessages")}
+		</#if>
+		</a>
+		</li>
+	</#if>
+	</ul>
+	</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav><!--navbar-->
+
+
+

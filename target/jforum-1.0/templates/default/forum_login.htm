@@ -1,0 +1,78 @@
+<#include "header.htm"/>
+<#assign breadCrumb>
+<div class="container-fluid breadcrumb-bg">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+			<li class="active"> ${I18n.getMessage("Login.enter")}</li>
+
+			<span id="date_time"></span><!--date_time-->
+		</ol><!--breadcrumb-->
+	</div><!--container-->
+</div>
+</#assign>
+
+${breadCrumb}
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="loginform" id="loginform" accept-charset="${encoding}">
+<input type="hidden" name="module" value="user" />
+<input type="hidden" name="action" value="validateLogin" />
+
+<#if returnPath?exists>
+<input type="hidden" name="returnPath" value="${returnPath?html}" />
+</#if>
+<div class="container">
+    <div class="col-sm-offset-2 col-sm-8 login-mainbox">
+        <div class="row">
+            <div class="col-sm-6 register-box">
+                <h1 class="title">Welcome to Dataexo Forum</h1>
+                <p>jforum is a powerful and robust discussion board system.
+                    It provides an attractive interface, an efficient forum engine, an easy to use administrative panel, an advanced permission control system and much more.</p>
+              <!--  <a class="btn" href="${JForumContext.encodeURL("/user/insert")}">Register Now <i class="fa fa-long-arrow-right"></i></a>-->
+            </div>
+            <div class="col-sm-6 login-box">
+                <h1 class="title">Login</h1>
+
+                <#if invalidLogin?exists>
+                <div>
+                    <span class="gen" id="invalidlogin">
+  							<font color="red">${I18n.getMessage("Login.invalidLogin")}</font>
+  						</span>
+                </div>
+
+            </#if>
+                <div class="col-3">
+                    <input class="effect-7" maxlength="40" size="25" name="username" type="text" placeholder="${I18n.getMessage("Login.user")}">
+                    <span class="focus-border"><i></i></span>
+                </div>
+                <div class="col-3">
+                    <input class="effect-7" type="password" type="password" maxlength="25" size="25" name="password" placeholder="${I18n.getMessage("Login.password")}">
+                    <span class="focus-border"><i></i></span>
+                </div>
+                <ul class="ac-option">
+                    <#if autoLoginEnabled>
+                    <li class="check checkbox">
+                        <label>
+                            <input type="checkbox" id="autologin" name="autologin">
+                            <span class="cr"><i class="cr-icon fa fa-check"></i></span> ${I18n.getMessage("Login.autoLogon")}
+                        </label>
+                    </li><!--checkbox-->
+
+                </#if>
+
+                    <li><a href="${JForumContext.encodeURL("/user/lostPassword")}">${I18n.getMessage("Login.lostPassword")}</a></li>
+                    <li><a href="${JForumContext.encodeURL("/user/activateManual")}">${I18n.getMessage("ActivateAccount.activate")}</a></li>
+                </ul>
+                <input type="hidden" name="redirect" />
+                <button type="submit" name="login" class="btn">${I18n.getMessage("Login.enter")} <i class="fa fa-long-arrow-right"></i></button>
+            </div>
+
+        </div>
+
+
+    </div><!--col-sm-9 / left-section-->
+
+
+</div><!--container-->
+
+</form>
+<#include "bottom.htm"/>

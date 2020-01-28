@@ -1,0 +1,134 @@
+<#include "header.htm"/>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="${contextPath}/rss/forums${extension}" />
+<div class="container-fluid breadcrumb-bg">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li class="active"><a href="${JForumContext.encodeURL("/forums/list")}"><i class="fa fa-home"></i> ${I18n.getMessage("ForumListing.forumIndex")}</a></li>
+
+			<span id="date_time">${I18n.getMessage("ForumListing.date")}: ${now}</span><!--date_time-->
+		</ol><!--breadcrumb-->
+	</div><!--container-->
+</div><!--container-fluid-->
+
+<div class="container">
+	<div class="col-sm-9 left-section">
+		<h1 class="title">${I18n.getMessage("ForumListing.forumIndex")}</h1>
+		<!-- START FORUM LISTING -->
+		<#list allCategories as category>
+		<#list category.getForums() as forum>
+		<#assign lpi = forumRepository.getLastPostInfo(forum.id)/>
+		<div class="row boxbg">
+			<div class="col-xs-1 col-sm-1 icon-img">
+				<img src="${contextPath}/templates/styles/images/forum-ic.png">
+			</div><!--icon-img-->
+			<div class="col-sm-11 forum-info">
+				<a href="${JForumContext.encodeURL("/forums/show/${forum.id}")}"><h3>${forum.name?html}</h3></a>
+				<p>
+					${forum.description?html}
+					<#if forum.isModerated()>
+					${I18n.getMessage("ForumIndex.moderators")}
+					<#assign moderators = forumRepository.getModeratorList(forum.id)/>
+					<#list moderators as m>
+					<a href="">${m.name?html}</a>
+				</#list>
+			</#if>
+			</p>
+			<ul class="sub-info">
+				<li><a href="#"><i class="fa fa-commenting"></i> Topics : ${forum.totalTopics}</a></li>
+				<li><a href="#"><i class="fa fa-user"></i> Admin :
+					<#assign total = forum.totalPosts/>
+					<#if (total == 0 && forum.totalTopics > 0)>
+					<#assign total = forum.totalTopics/>
+				</#if>
+					<span class="gensmall"><#if (total > 0)>${total}<#else>${I18n.getMessage("ForumListing.noMessages")}</#if></span>
+					</a>
+
+				</li>
+				<li><i class="fa fa-calendar"></i>
+					<#if (lpi.postTimeMillis > 0)>
+					${lpi.postDate}
+					<#if (lpi.userId > 0)><a href="${JForumContext.encodeURL("/user/profile/${lpi.userId}")}"></#if>${lpi.username}</a>
+
+				<#assign startPage = ""/>
+				<#if (lpi.topicReplies + 1 > topicsPerPage)>
+				<#assign startPage = ((lpi.topicReplies / topicsPerPage)?int * topicsPerPage) +"/"/>
+			</#if>
+
+			<#assign url = JForumContext.encodeURL("/posts/list/${startPage}${lpi.topicId}") + "#" + lpi.postId/>
+			<a href="${url}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="[Latest Reply]" /></a>
+			<#else>
+			${I18n.getMessage("ForumListing.noMessages")}
+		</#if>
+		</li>
+		<!--<li><i class="fa fa-clock-o"></i> 06:10:50</li>-->
+		</ul>
+	</div><!--forum-info-->
+
+</div><!--row / boxbg-->
+</#list>
+</#list>
+<!-- END OF FORUM LISTING -->
+<!--<div class="pagination-section">
+    <ul class="pagination">
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#">6</a></li>
+        <li><a href="#">7</a></li>
+        <li><a href="#">8</a></li>
+    </ul>&lt;!&ndash;pagination&ndash;&gt;
+</div>&lt;!&ndash;pagination-section&ndash;&gt;-->
+
+</div><!--col-sm-9 / left-section-->
+
+<div class="col-sm-3 right-section">
+	<h1 class="title">calendar</h1>
+	<div class="calendar">
+		<div id="datepicker" data-date="12/03/2012"></div>
+		<input type="hidden" id="my_hidden_input">
+	</div><!--calendar-->
+
+	<h1 class="title">${I18n.getMessage("ForumListing.whoIsOnline")}</h1>
+	<div class="boxbg2">
+		<p>${I18n.getMessage("ForumListing.totalMessagesInfo", [ totalMessages ])}</p>
+		<p>${I18n.getMessage("ForumListing.registeredUsers", [ totalRegisteredUsers ])} ${I18n.getMessage("ForumListing.newestUser")}
+			<a href="${JForumContext.encodeURL("/user/profile/${lastUser.id}")}">${lastUser.username}</a>
+		</p>
+		<hr>
+		<p>${I18n.getMessage("ForumListing.numberOfUsersOnline", [ totalOnlineUsers, totalRegisteredOnlineUsers, totalAnonymousUsers ])}</p>
+		<p><i class="fa fa-circle registered"></i> <span>1 Registered</span></p>
+		<p><i class="fa fa-circle guest"></i> <span>4 Guest</span></p>
+		<p>${I18n.getMessage("ForumListing.mostUsersEverOnline", [ mostUsersEverOnline.getTotal(), mostUsersEverOnline.getDate()?string ])}</p>
+		<p class="date"><i class="fa fa-calendar"></i> 04/01/2018 | <i class="fa fa-clock-o"></i> 06:10:50</p>
+		<p>${I18n.getMessage("ForumListing.connectedUsers")}:
+			<#assign adminColor = "class='admin'"/>
+			<#assign moderatorColor = "class='moderator'"/>
+			<#assign color = ""/>
+
+			<span>
+<#list userSessions as us>
+			<#if us.isAdmin()>
+			<#assign color = adminColor/>
+			<#elseif us.isModerator()>
+			<#assign color = moderatorColor/>
+			<#else>
+			<#assign color = ""/>
+		</#if>
+
+			<a href="${JForumContext.encodeURL("/user/profile/${us.userId}")}"><span ${color}>${us.username}</span></a>&nbsp;
+		</#list>
+		</span>
+		</p>
+	</div><!--boxbg2-->
+
+
+</div><!--col-sm-3 / right-section-->
+
+
+
+</div><!--container-->
+
+
+<#include "bottom.htm"/>

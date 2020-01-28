@@ -1,0 +1,67 @@
+
+<#if htmlAllowed>
+<li class="check checkbox">
+	<label>${I18n.getMessage("PostForm.disableHtml")}
+		<input type="checkbox" id="disable_html" name="disable_html" ${htmlChecked}>
+		<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+	</label>
+</li>
+<#else>
+<input type="hidden" name="disable_html" value="1" />
+</#if>
+<li class="check checkbox">
+	<label>${I18n.getMessage("PostForm.disableBbCode")}
+		<input type="checkbox" id="disable_bbcode" name="disable_bbcode" ${bbChecked}>
+		<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+	</label>
+</li>
+<li class="check checkbox">
+	<label>${I18n.getMessage("PostForm.disableSmilies")}
+		<input type="checkbox" id="disable_smilies" name="disable_smilies" ${smiliesChecked}>
+		<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+	</label>
+</li>
+
+<#if user.id != 1>
+
+<li class="check checkbox">
+	<label>${I18n.getMessage("PostForm.appendSignature")}
+		<input type="checkbox" id="attach_sig" name="attach_sig" ${signatureChecked}>
+		<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+	</label>
+</li>
+
+<#if forum?exists>
+
+<li class="check checkbox">
+	<label>${I18n.getMessage("PostForm.notifyReplies")}
+		<input type="checkbox" id="notify" name="notify" ${repliesChecked}>
+		<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+	</label>
+</li>
+</#if>
+</#if>
+
+<#if setType?default(true) && forum?exists && canCreateStickyOrAnnouncementTopics?default(false)>
+
+<li class="check checkbox">
+	<label>${I18n.getMessage("PostForm.setTopicAsNormal")}
+		<input type="radio" checked="checked" value="0" id="topic_type0" name="topic_type" <#if topic?exists && topic.type == 0>checked="checked"</#if>/>
+	<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+	</label>
+</li>
+<li class="check checkbox">
+	<label>${I18n.getMessage("PostForm.setTopicAsSticky")}
+		<input type="radio" value="1" id="topic_type1" name="topic_type" <#if topic?exists && topic.type == 1>checked="checked"</#if>/>
+	<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+	</label>
+</li>
+<li class="check checkbox">
+	<label>${I18n.getMessage("PostForm.setTopicAsAnnounce")}
+		<input type="radio" value="2" id="topic_type2" name="topic_type" <#if topic?exists && topic.type == 2>checked="checked"</#if>/>
+	<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+	</label>
+</li>
+<#elseif topic?exists>
+<input type="hidden" name="topic_type" value="${topic.type}" />
+</#if>
